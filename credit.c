@@ -12,31 +12,31 @@ int main(void)
     bool everyOther = true;
     while (number > 0)
     {
-        if(number<100 && number>9)
+        if (number < 100 && number > 9)
         {
-            first = number/10;
-            second = number%10;
+            first = number / 10;
+            second = number % 10;
         }
         if (everyOther)
         {
-            sum += number%10;
+            sum += number % 10;
         }
         else
         {
-            int timesTwo = (number%10)*2;
-            sum += timesTwo%10 + timesTwo/10;
+            int timesTwo = (number % 10) * 2;
+            sum += timesTwo % 10 + timesTwo / 10;
         }
         everyOther = !everyOther;
         digits++;
-        number = number/10;
+        number = number / 10;
     }
-    if(sum%10==0)
+    if (sum % 10 == 0)
     {
-        if(digits==15 && first==3 && (second==4 || second==7))
+        if (digits == 15 && first == 3 && (second == 4 || second == 7))
         {
             printf("AMEX\n");
         }
-        else if(digits==16 && first==5 && second>0 && second<6)
+        else if (digits == 16 && first==5 && second>0 && second<6)
         {
             printf("MASTERCARD\n");
         }
