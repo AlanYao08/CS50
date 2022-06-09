@@ -8,20 +8,20 @@ int main(void)
     {
         height = get_int("Height: ");
     }
-    while(height < 1 || height > 8);
+    while (height < 1 || height > 8);
 
-    for(int gap=height-1; gap>=0; gap--)
+    for (int gap = height - 1; gap >= 0; gap--)
     {
-        for(int i=0; i<gap; i++)
+        for (int i = 0; i < gap; i++)
         {
             printf(" ");
         }
-        for(int j=0; j<height-gap; j++)
+        for (int j = 0; j < height - gap; j++)
         {
             printf("#");
         }
         printf("  ");
-        for(int k=0; k<height-gap; k++)
+        for (int k = 0; k < height - gap; k++)
         {
             printf("#");
         }
