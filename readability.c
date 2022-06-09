@@ -29,7 +29,7 @@ int main(void)
 int count_letters(string text)
 {
     int count = 0;
-    int i=0;
+    int i = 0;
     while (text[i] != '\0')
     {
         if ((text[i] >= 'a' && text[i] <= 'z') || (text[i] >= 'A' && text[i] <= 'Z'))
@@ -43,7 +43,7 @@ int count_letters(string text)
 int count_words(string text)
 {
     int count = 1;
-    int i=0;
+    int i = 0;
     while (text[i] != '\0')
     {
         if (text[i] == ' ')
@@ -57,7 +57,7 @@ int count_words(string text)
 int count_sentences(string text)
 {
     int count = 0;
-    int i=0;
+    int i = 0;
     while (text[i] != '\0')
     {
         if (text[i] == '.' || text[i] == '!' || text[i] == '?')
