@@ -35,16 +35,16 @@ int main(void)
 int compute_score(string word)
 {
     int score = 0;
-    int i=0;
+    int i = 0;
     while (word[i] != '\0')
     {
         if (word[i] >= 'a' && word[i] <= 'z')
         {
-            score += POINTS[word[i]-97];
+            score += POINTS[word[i] - 97];
         }
         else if (word[i] >= 'A' && word[i] <= 'Z')
         {
-            score += POINTS[word[i]-65];
+            score += POINTS[word[i] - 65];
         }
         i++;
     }
