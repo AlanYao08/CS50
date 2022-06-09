@@ -36,11 +36,11 @@ int main(void)
         {
             printf("AMEX\n");
         }
-        else if (digits == 16 && first==5 && second>0 && second<6)
+        else if (digits == 16 && first == 5 && second > 0 && second < 6)
         {
             printf("MASTERCARD\n");
         }
-        else if((digits==13 || digits==16) && first==4)
+        else if ((digits == 13 || digits == 16) && first == 4)
         {
             printf("VISA\n");
         }
