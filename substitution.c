@@ -4,7 +4,7 @@
 
 int main(int argc, string argv[])
 {
-    if(argc != 2)
+    if (argc != 2)
     {
         printf("Usage: ./substitution key\n");
         return 1;
@@ -13,8 +13,8 @@ int main(int argc, string argv[])
     int alphabet[26];
     int keyChange[26];
     int count = 0;
-    int i=0;
-    while(key[i] != '\0')
+    int i = 0;
+    while (key[i] != '\0')
     {
         if (!isalpha(key[i]))
         {
@@ -25,13 +25,13 @@ int main(int argc, string argv[])
         {
             key[i] = key[i] + 32;
         }
-        if (alphabet[key[i]-97] == 1)
+        if (alphabet[key[i] - 97] == 1)
         {
             printf("Key must contain 26 different letters.\n");
             return 1;
         }
-        alphabet[key[i]-97] = 1;
-        keyChange[i] = (int) key[i]-97-i;
+        alphabet[key[i] - 97] = 1;
+        keyChange[i] = (int) key[i] - 97 - i;
         i++;
         count++;
     }
@@ -42,16 +42,16 @@ int main(int argc, string argv[])
     }
     string plaintext = get_string("plaintext:  ");
     printf("ciphertext: ");
-    int j=0;
-    while(plaintext[j] != '\0')
+    int j = 0;
+    while (plaintext[j] != '\0')
     {
         if (islower(plaintext[j]))
         {
-            printf("%c", plaintext[j] + keyChange[plaintext[j]-97]);
+            printf("%c", plaintext[j] + keyChange[plaintext[j] - 97]);
         }
         else if (isupper(plaintext[j]))
         {
-            printf("%c", plaintext[j] + keyChange[plaintext[j]-65]);
+            printf("%c", plaintext[j] + keyChange[plaintext[j] - 65]);
         }
         else
         {
