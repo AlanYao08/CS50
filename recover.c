@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     BYTE buffer[512];
     FILE *output = NULL;
     int count = 0;
-    char *filename = malloc(8 * sizeof(BYTE));
+    char *filename = malloc(8 * sizeof(BYTE) + 1);
     while (fread(buffer, sizeof(BYTE), 512, input))
     {
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
