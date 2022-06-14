@@ -197,9 +197,9 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
                 sumGreenX += 2 * image[i][j+1].rgbtGreen;
                 sumRedX += 2 * image[i][j+1].rgbtRed;
             }
-            stored[i][j][0] = round(sqrt(pow(sumBlueX, 2)) + pow(sumBlueY, 2));
-            stored[i][j][1] = round(sqrt(pow(sumGreenX, 2)) + pow(sumGreenY, 2));
-            stored[i][j][2] = round(sqrt(pow(sumRedX, 2)) + pow(sumRedY, 2));
+            stored[i][j][0] = round(sqrt(pow(sumBlueX, 2) + pow(sumBlueY, 2)));
+            stored[i][j][1] = round(sqrt(pow(sumGreenX, 2) + pow(sumGreenY, 2)));
+            stored[i][j][2] = round(sqrt(pow(sumRedX, 2) + pow(sumRedY, 2)));
         }
     }
 
