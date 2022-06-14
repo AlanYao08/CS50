@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
         printf("Could not open file.\n");
         return 1;
     }
-    uint8_t buffer[512];
+    BYTE buffer[512];
     FILE *output = NULL;
     int count = 0;
-    char *filename = malloc(8 * sizeof(char) + 1);
-    while (fread(buffer, sizeof(uint8_t), 512, input) == 512)
+    char *filename = malloc(8 * sizeof(BYTE));
+    while (fread(buffer, sizeof(BYTE), 512, input))
     {
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
         {
@@ -32,10 +32,11 @@ int main(int argc, char *argv[])
         }
         if (output != NULL) // It's been used
         {
-            fwrite(buffer, sizeof(uint8_t), 512, input);
+            fwrite(buffer, sizeof(BYTE), 512, input);
         }
     }
     free(filename);
     fclose(input);
     fclose(output);
+    return 0;
 }
