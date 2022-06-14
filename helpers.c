@@ -39,6 +39,8 @@ void reflect(int height, int width, RGBTRIPLE image[height][width])
 // Blur image
 void blur(int height, int width, RGBTRIPLE image[height][width])
 {
+    int stored[height][width][3];
+
     for (int i=0; i<height; i++)
     {
         for (int j=0; j<width; j++)
@@ -103,9 +105,19 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
                 sumGreen += image[i][j+1].rgbtGreen;
                 sumRed += image[i][j+1].rgbtRed;
             }
-            image[i][j].rgbtBlue = round((float) sumBlue/count);
-            image[i][j].rgbtGreen = round((float) sumGreen/count);
-            image[i][j].rgbtRed = round((float) sumRed/count);
+            stored[i][j][0] = round((float) sumBlue/count);
+            stored[i][j][1] = round((float) sumGreen/count);
+            stored[i][j][2] = round((float) sumRed/count);
+        }
+    }
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            image[i][j].rgbtBlue = stored[i][j][0];
+            image[i][j].rgbtGreen = stored[i][j][1];
+            image[i][j].rgbtRed = stored[i][j][2];
         }
     }
 }
@@ -113,6 +125,8 @@ void blur(int height, int width, RGBTRIPLE image[height][width])
 // Detect edges
 void edges(int height, int width, RGBTRIPLE image[height][width])
 {
+    int stored[height][width][3];
+
     for (int i=0; i<height; i++)
     {
         for (int j=0; j<width; j++)
@@ -183,9 +197,19 @@ void edges(int height, int width, RGBTRIPLE image[height][width])
                 sumGreenX += 2 * image[i][j+1].rgbtGreen;
                 sumRedX += 2 * image[i][j+1].rgbtRed;
             }
-            image[i][j].rgbtBlue = round(sqrt(pow(sumBlueX, 2)) + pow(sumBlueY, 2));
-            image[i][j].rgbtGreen = round(sqrt(pow(sumGreenX, 2)) + pow(sumGreenY, 2));
-            image[i][j].rgbtRed = round(sqrt(pow(sumRedX, 2)) + pow(sumRedY, 2));
+            stored[i][j][0] = round(sqrt(pow(sumBlueX, 2)) + pow(sumBlueY, 2));
+            stored[i][j][1] = round(sqrt(pow(sumGreenX, 2)) + pow(sumGreenY, 2));
+            stored[i][j][2] = round(sqrt(pow(sumRedX, 2)) + pow(sumRedY, 2));
+        }
+    }
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            image[i][j].rgbtBlue = stored[i][j][0];
+            image[i][j].rgbtGreen = stored[i][j][1];
+            image[i][j].rgbtRed = stored[i][j][2];
         }
     }
 }
