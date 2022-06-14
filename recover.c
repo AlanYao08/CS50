@@ -19,23 +19,27 @@ int main(int argc, char *argv[])
         return 1;
     }
     BYTE buffer[512];
-    FILE *output = NULL;
     int count = 0;
-    char *filename = malloc(8 * sizeof(BYTE) + 1);
-    while (fread(buffer, sizeof(BYTE), 512, input))
+    FILE *output = NULL;
+    char filename[8];
+    while (fread(buffer, sizeof(BYTE), 512, input) == 512)
     {
         if (buffer[0] == 0xff && buffer[1] == 0xd8 && buffer[2] == 0xff && (buffer[3] & 0xf0) == 0xe0)
         {
+            if (count != 0)
+            {
+                fclose(output);
+            }
             sprintf(filename, "%03i.jpg", count);
             output = fopen(filename, "w");
+            fwrite(buffer, sizeof(BYTE), 512, output);
             count++;
         }
-        if (output != NULL) // It's been used
+        else if (count > 0)
         {
-            fwrite(buffer, sizeof(BYTE), 512, input);
+            fwrite(buffer, sizeof(BYTE), 512, output);
         }
     }
-    free(filename);
     fclose(input);
     fclose(output);
     return 0;
