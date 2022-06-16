@@ -51,7 +51,7 @@ person *create_family(int generations)
         new->parents[0] = parent0;
         new->parents[1] = parent1;
 
-        if(rand() % 2 == 0)
+        if (rand() % 2 == 0)
         {
             new->alleles[0] = parent0->alleles[0];
         }
@@ -59,7 +59,7 @@ person *create_family(int generations)
         {
             new->alleles[0] = parent0->alleles[1];
         }
-        if(rand() % 2 == 0)
+        if (rand() % 2 == 0)
         {
             new->alleles[1] = parent1->alleles[0];
         }
@@ -85,7 +85,7 @@ person *create_family(int generations)
 // Free `p` and all ancestors of `p`.
 void free_family(person *p)
 {
-    if(p == NULL)
+    if (p == NULL)
     {
         return;
     }
