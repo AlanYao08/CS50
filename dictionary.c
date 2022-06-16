@@ -108,7 +108,7 @@ bool unload(void)
             cursor = cursor->next;
             free(tmp);
         }
-        if (cursor == NULL && j==N-1)
+        if (cursor == NULL && j == N - 1)
         {
             return true;
         }
