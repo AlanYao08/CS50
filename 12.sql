@@ -1,3 +1,4 @@
 SELECT title
-FROM movies, stars, people
-check50 cs50/problems/2022/x/moviesWHERE person_id = (SELECT id FROM people WHERE name = "Johnny Depp");
+FROM movies
+WHERE id IN (SELECT movie_id FROM stars WHERE stars.person_id = (SELECT id FROM people WHERE name = "Johnny Depp"))
+AND id IN (SELECT movie_id FROM stars WHERE stars.person_id = (SELECT id FROM people WHERE name = "Helena Bonham Carter"));
