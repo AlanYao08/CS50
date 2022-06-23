@@ -78,7 +78,8 @@ def buy():
         if cash < price * shares:
             return apology("You don't have enough cash")
 
-        db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", id, symbol, shares, price, datetime.datetime.now())
+        db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)",
+            id, symbol, shares, price, datetime.datetime.now())
 
         symbols = db.execute("SELECT symbol FROM transactions WHERE id=?", id)
         for i in range(len(symbols)):
@@ -90,7 +91,8 @@ def buy():
                 db.execute("UPDATE users SET cash = ? WHERE id = ?", cash-(price*shares), id)
                 flash("Bought!")
                 return redirect("/")
-        db.execute("INSERT INTO transactions (id, symbol, shares, price, total, time, name) VALUES (?, ?, ?, ?, ?, ?, ?)", id, quote["symbol"], shares, price, shares * price, datetime.datetime.now(), quote["name"])
+        db.execute("INSERT INTO transactions (id, symbol, shares, price, total, time, name) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            id, quote["symbol"], shares, price, shares * price, datetime.datetime.now(), quote["name"])
         db.execute("UPDATE users SET cash = ? WHERE id = ?", cash-(price*shares), id)
         flash("Bought!")
         return redirect("/")
@@ -218,11 +220,13 @@ def sell():
         id = session["user_id"][0]["id"]
         cash = db.execute("SELECT cash FROM users WHERE id = ?", id)[0]["cash"]
 
-        current_shares = db.execute("SELECT shares FROM transactions WHERE id = ? AND symbol = ? GROUP BY symbol", id, symbol)[0]["shares"]
+        current_shares = db.execute(
+            "SELECT shares FROM transactions WHERE id = ? AND symbol = ? GROUP BY symbol", id, symbol)[0]["shares"]
         if shares > current_shares:
             return apology("You do not have enough shares")
 
-        db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", id, symbol, shares*-1, quote["price"], datetime.datetime.now())
+        db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)",
+            id, symbol, shares*-1, quote["price"], datetime.datetime.now())
 
         symbols = db.execute("SELECT symbol FROM transactions WHERE id=?", id)
         for i in range(len(symbols)):
@@ -239,4 +243,24 @@ def sell():
     else:
         id = session["user_id"][0]["id"]
         symbols = db.execute("SELECT symbol FROM transactions WHERE id = ? GROUP BY symbol", id)
-        return render_template("sell.html", symbols = [row["symbol"] for row in symbols])
+        return render_template("sell.html", symbols=[row["symbol"] for row in symbols])
+
+
+@app.route("/add_cash", methods=["GET", "POST"])
+@login_required
+def add_cash():
+    """Add cash to users account"""
+    if request.method == "POST":
+        amount = request.form.get("amount")
+        if not amount:
+            return apology("Blank amount")
+        if not amount.isnumeric() or float(amount) < 0 or not float(amount).is_integer() or not float(amount) < 1e15:
+            return apology("Must be positive integer number of cash less than a quadrillion")
+        amount = int(amount)
+        id = session["user_id"][0]["id"]
+        oldCash = db.execute("SELECT cash FROM users WHERE id = ?", id)[0]["cash"]
+        db.execute("UPDATE users SET cash = ? WHERE id = ?", oldCash + amount, id)
+        flash("Added!")
+        return redirect("/")
+    else:
+        return render_template("add.html")
