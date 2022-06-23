@@ -159,16 +159,16 @@ def register():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        password_verify = request.form.get("password_verify")
+        confirmation = request.form.get("confirmation")
 
         if not username:
             return apology("Blank username")
         if not password:
             return apology("Blank password")
-        if not password_verify:
+        if not confirmation:
             return apology("Blank password verification")
 
-        if password != password_verify:
+        if password != confirmation:
             return apology("Password does not match password verification")
 
         if username in db.execute("SELECT username FROM users"):
