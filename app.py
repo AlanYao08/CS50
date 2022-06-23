@@ -66,7 +66,12 @@ def buy():
         quote = lookup(symbol)
         if quote == None:
             return apology("Stock symbol does not exist")
-        shares = int(request.form.get("shares"))
+        shares = request.form.get("shares")
+
+        if int(shares) < 0 or not shares.isnumeric() or not float(shares).is_integer():
+            return apology("Must be positive integer number of shares")
+        shares = int(shares)
+
         price = float(quote["price"])
         id = session["user_id"][0]["id"]
         cash = db.execute("SELECT cash FROM users WHERE id = ?", id)[0]["cash"]
@@ -157,7 +162,7 @@ def quote():
         symbol = request.form.get("symbol")
         quote = lookup(symbol)
         if quote == None:
-            apology("Stock symbol does not exist")
+            return apology("Stock symbol does not exist")
         return render_template("quoted.html", name=quote["name"], price=quote["price"], symbol=quote["symbol"])
     else:
         return render_template("quote.html")
@@ -182,8 +187,9 @@ def register():
             return apology("Password does not match password verification")
 
         hash = generate_password_hash(password)
-        result = db.execute("INSERT INTO users(username, hash) VALUES (?, ?)", username, hash)
-        if not result:
+        try:
+            db.execute("INSERT INTO users(username, hash) VALUES (?, ?)", username, hash)
+        except:
             return apology("Username already exists")
         session["user_id"] = db.execute("SELECT id FROM users WHERE username = ?", username)
         flash("Registered!")
