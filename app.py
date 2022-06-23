@@ -47,9 +47,6 @@ def index():
     """Show portfolio of stocks"""
     id = session["user_id"][0]["id"]
     transactions = db.execute("SELECT * FROM transactions WHERE id = ?", id)
-    name = ""
-    if len(transactions) > 0:
-        name = lookup(transactions[0]["symbol"])["name"]
     cash = db.execute("SELECT cash FROM users WHERE id = ?", id)[0]["cash"]
 
     totalTotal = db.execute("SELECT SUM(total) FROM transactions WHERE id = ?", id)[0]["SUM(total)"]
@@ -57,7 +54,7 @@ def index():
         totalTotal = 0
     totalTotal += cash
 
-    return render_template("index.html", transactions=transactions, name=name, cash=cash, totalTotal=totalTotal)
+    return render_template("index.html", transactions=transactions, cash=cash, totalTotal=totalTotal)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -65,7 +62,7 @@ def index():
 def buy():
     """Buy shares of stock"""
     if request.method == "POST":
-        symbol = request.form.get("symbol")
+        symbol = request.form.get("symbol").upper()
         quote = lookup(symbol)
         if quote == None:
             return apology("Stock symbol does not exist")
@@ -75,7 +72,20 @@ def buy():
         cash = db.execute("SELECT cash FROM users WHERE id = ?", id)[0]["cash"]
         if cash < price * shares:
             return apology("You don't have enough cash")
-        db.execute("INSERT INTO transactions (id, symbol, shares, price, total, time) VALUES (?, ?, ?, ?, ?, ?)", id, quote["symbol"], shares, price, shares * price, datetime.datetime.now())
+
+        db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", id, symbol, shares, price, datetime.datetime.now())
+
+        symbols = db.execute("SELECT symbol FROM transactions WHERE id=?", id)
+        for i in range(len(symbols)):
+            if symbol == symbols[i]["symbol"]:
+                oldShares = db.execute("SELECT shares FROM transactions WHERE id=? AND symbol=?", id, symbol)[0]["shares"]
+                db.execute("UPDATE transactions SET shares = ? WHERE id = ?", shares+oldShares, id)
+                db.execute("UPDATE transactions SET price = ? WHERE id = ?", price, id)
+                db.execute("UPDATE transactions SET total = ? WHERE id = ?", (shares+oldShares) * price, id)
+                db.execute("UPDATE users SET cash = ? WHERE id = ?", cash-(price*shares), id)
+                flash("Bought!")
+                return redirect("/")
+        db.execute("INSERT INTO transactions (id, symbol, shares, price, total, time, name) VALUES (?, ?, ?, ?, ?, ?, ?)", id, quote["symbol"], shares, price, shares * price, datetime.datetime.now(), quote["name"])
         db.execute("UPDATE users SET cash = ? WHERE id = ?", cash-(price*shares), id)
         flash("Bought!")
         return redirect("/")
@@ -88,8 +98,8 @@ def buy():
 def history():
     """Show history of transactions"""
     id = session["user_id"][0]["id"]
-    transactions = db.execute("SELECT * FROM transactions WHERE id=?", id)
-    return render_template("history.html", transactions = transactions)
+    history = db.execute("SELECT * FROM history WHERE id=?", id)
+    return render_template("history.html", history=history)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -171,11 +181,10 @@ def register():
         if password != confirmation:
             return apology("Password does not match password verification")
 
-        if username in db.execute("SELECT username FROM users"):
-            return apology("Username already exists")
-
         hash = generate_password_hash(password)
-        db.execute("INSERT INTO users(username, hash) VALUES (?, ?)", username, hash)
+        result = db.execute("INSERT INTO users(username, hash) VALUES (?, ?)", username, hash)
+        if not result:
+            return apology("Username already exists")
         session["user_id"] = db.execute("SELECT id FROM users WHERE username = ?", username)
         flash("Registered!")
         return redirect("/")
@@ -207,11 +216,20 @@ def sell():
         if shares > current_shares:
             return apology("You do not have enough shares")
 
-        db.execute("UPDATE users SET cash = ? WHERE id = ?", cash+value, id)
-        db.execute("INSERT INTO transactions (id, symbol, shares, price, total, time) VALUES (?, ?, ?, ?, ?, ?)", id, symbol, shares, quote["price"], shares * quote["price"], datetime.datetime.now())
+        db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)", id, symbol, shares*-1, quote["price"], datetime.datetime.now())
 
-        flash("Sold!")
-        return redirect("/")
+        symbols = db.execute("SELECT symbol FROM transactions WHERE id=?", id)
+        for i in range(len(symbols)):
+            if symbol == symbols[i]["symbol"]:
+                oldShares = db.execute("SELECT shares FROM transactions WHERE id=? AND symbol=?", id, symbol)[0]["shares"]
+                db.execute("UPDATE transactions SET shares = ? WHERE id = ?", oldShares-shares, id)
+                db.execute("UPDATE transactions SET price = ? WHERE id = ?", quote["price"], id)
+                db.execute("UPDATE transactions SET total = ? WHERE id = ?", (oldShares-shares) * quote["price"], id)
+                db.execute("UPDATE users SET cash = ? WHERE id = ?", cash+value, id)
+                flash("Sold!")
+                return redirect("/")
+
+        return apology("You do not own any shares of that stock")
     else:
         id = session["user_id"][0]["id"]
         symbols = db.execute("SELECT symbol FROM transactions WHERE id = ? GROUP BY symbol", id)
