@@ -79,7 +79,7 @@ def buy():
             return apology("You don't have enough cash")
 
         db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)",
-            id, symbol, shares, price, datetime.datetime.now())
+                id, symbol, shares, price, datetime.datetime.now())
 
         symbols = db.execute("SELECT symbol FROM transactions WHERE id=?", id)
         for i in range(len(symbols)):
@@ -92,7 +92,7 @@ def buy():
                 flash("Bought!")
                 return redirect("/")
         db.execute("INSERT INTO transactions (id, symbol, shares, price, total, time, name) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            id, quote["symbol"], shares, price, shares * price, datetime.datetime.now(), quote["name"])
+                id, quote["symbol"], shares, price, shares * price, datetime.datetime.now(), quote["name"])
         db.execute("UPDATE users SET cash = ? WHERE id = ?", cash-(price*shares), id)
         flash("Bought!")
         return redirect("/")
@@ -226,7 +226,7 @@ def sell():
             return apology("You do not have enough shares")
 
         db.execute("INSERT INTO history (id, symbol, shares, price, time) VALUES (?, ?, ?, ?, ?)",
-            id, symbol, shares*-1, quote["price"], datetime.datetime.now())
+                id, symbol, shares*-1, quote["price"], datetime.datetime.now())
 
         symbols = db.execute("SELECT symbol FROM transactions WHERE id=?", id)
         for i in range(len(symbols)):
