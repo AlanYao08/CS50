@@ -68,7 +68,7 @@ def buy():
             return apology("Stock symbol does not exist")
         shares = request.form.get("shares")
 
-        if int(shares) < 0 or not shares.isnumeric() or not float(shares).is_integer():
+        if float(shares) < 0 or not shares.isnumeric() or not float(shares).is_integer():
             return apology("Must be positive integer number of shares")
         shares = int(shares)
 
