@@ -1,0 +1,1 @@
+My initial model was just a convolutional layer and a pooling layer. I noticed it did worse on the training data, which might mean it was overfitting, so I added dropout. Dropout fixed the problem but also made the average accuracy lower. I increased the accuracy by adding another convolutional layer and pooling layer with more filters. I also changed the activation function.
