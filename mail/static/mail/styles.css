@@ -1,0 +1,33 @@
+textarea {
+    min-height: 400px;
+}
+
+.unreadEmail {
+    position: relative;
+    border: 2px solid black;
+    width: 1110px;
+    height: 40px;
+}
+
+.readEmail {
+    position: relative;
+    border: 2px solid black;
+    background-color: lightgray;
+    width: 1110px;
+    height: 40px;
+}
+
+.nameEmail {
+    position: absolute;
+    left: 5px;
+    vertical-align: middle;
+    line-height: 38px;
+}
+
+.timeEmail {
+    position: absolute;
+    right: 5px;
+    color: gray;
+    vertical-align: middle;
+    line-height: 38px;
+}
