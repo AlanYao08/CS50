@@ -1,0 +1,57 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h3>All Posts</h3>
+    {% if user.is_authenticated %}
+        <div class="post">
+            <h5>New Post</h5>
+            <form action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                <textarea rows="3" cols="160" name="post"></textarea>
+                <br>
+                <input class="btn btn-primary" type="submit" value="Post">
+            </form>
+        </div>
+    {% endif %}
+    {% for post in page_obj %}
+        <div class="post">
+            <h5><a style="color: black;" href="{% url 'user' user=post.poster%}">{{ post.poster }}</a></h5>
+            {% if user.id == post.poster.id %}
+                <div id="edit-{{post.id}}" onclick="edit('{{ post.id }}')" class="text-primary">Edit</div>
+            {% endif %}
+            <textarea rows="3" cols="160" id="edit-box-{{post.id}}" name="edit-box" style="display: none;"></textarea>
+            <button id="edit-btn-{{post.id}}" class="btn btn-primary" style="display: none;">Save</button>
+            <div id="post-{{post.id}}">{{ post.content }}</div>
+            <div id="time-{{post.id}}" class="text">
+                {{ post.time }}
+            </div>
+            {% if user.is_authenticated %}
+                <div id="like-part-{{post.id}}" onclick="like('{{ post.id }}')">
+                    <span id="like-text-{{post.id}}" class="text">&#10084;&#65039; </span>
+                    <span id="like-btn-{{post.id}}" class="text">{{ post.likes }}</span>
+                </div>
+            {% else %}
+                <div id="like-part-{{post.id}}">
+                    <span id="like-text-{{post.id}}" class="text">&#10084;&#65039; </span>
+                    <span id="like-btn-{{post.id}}" class="text">{{ post.likes }}</span>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% if multiple_pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+    <hr>
+{% endblock %}

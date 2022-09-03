@@ -1,0 +1,31 @@
+.body {
+    padding: 10px;
+}
+
+.post {
+    border: 2px solid lightgray;
+    border-radius: 5px;
+    padding: 18px;
+    width: 1440px;
+    height: 200px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.text {
+    color: gray;
+}
+
+.like-text {
+    color: gray;
+}
+
+h5 {
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+textarea {
+    border: 2px solid lightgray;
+    border-radius: 5px;
+}
