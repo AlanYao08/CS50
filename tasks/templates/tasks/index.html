@@ -1,0 +1,90 @@
+{% extends "tasks/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="categories" class="d-flex flex-row">
+        {% for category in categories %}
+            <div id="category-{{ category.idName }}" class="container col-md-auto" style="padding-left: 8px; padding-top: 6px; padding-bottom: 5px; background-color: {{ category.color }}80; min-width: 205px;">
+                <div class="circle" id="category-{{ category.idName }}-circle" style="background-color: {{ category.color }}; margin-top: 2px; margin-left: 2px; margin-right: 10px; height: 20px; width: 20px;"></div>
+                <span id="category-{{ category.idName }}-name" style="float: left; color: MidnightBlue; margin-right: 3px; white-space: pre;">{{ category.name }}</span>
+                <input class="form-control form-control-color" id="edit-category-{{ category.idName }}-color" type="color" style="display: none; float: left; height: 23px; width: 23px; padding: 0px; margin-right: 5.3px;">
+                <input autofocus class="form-control editInput" id="edit-category-{{ category.idName }}-name" type="text" name="name" placeholder="New Category Name" style="display: none; float: left;" oninput="onInput('edit-category-{{ category.idName }}-name')">
+                <span class="editMeasure"></span>
+                <span id="category-{{ category.idName }}-delete" style="float: right;" class="hover" onclick="delete_category('{{ category.idName }}')">Delete</span>
+                <span id="edit-category-{{ category.idName }}-submit" class="hover" style="display: none; float: right; margin-left: 7px; margin-right: 7px;" onclick="edit_category_submit('{{ category.idName }}')">Save</span>
+                <span id="edit-category-{{ category.idName }}" style="float: right; margin-left: 7px; margin-right: 7px;" class="hover" onclick="edit_category('{{ category.idName }}')">Edit</span>
+            </div>
+        {% endfor %}
+        <div id="add-category-text" class="hover container col-md-auto" onclick="add_category()" style="background-color: silver; min-width: 200px; padding-top: 5px; padding-bottom: 5px; height: 35px;">
+            <p>Add a category</p>
+        </div>
+        <div id="add-category" class="container col-md-auto" style="display: none; background-color: silver; padding-top: 6px; padding-bottom: 5px; min-width: 200px;">
+            <input class="form-control form-control-color" id="category-color" type="color" value="#ffffff" style="float: left; width: 30px; height: 30px; padding: 0px; margin-top: 4px; margin-bottom: 5px; margin-left: 3px; margin-right: 5px;">
+            <input class="form-control" id="category-name" type="text" name="name" placeholder="Category Name" style="float: left; width: 142px; min-width: 142px; margin-bottom: 5px;" oninput="onInput('category-name')">
+            <span class="addMeasure"></span>
+            <br>
+            <button id="add-category-submit" class="btn btn-primary" onclick="submit_add_category()">Add Category</button>
+            <span id="add-category-cancel" class="hover" onclick="stop_add_category()">Cancel</span>
+        </div>
+    </div>
+    <div id="lists" class="d-flex flex-row">
+        {% for list in lists %}
+            <div id="list-{{ list.idName }}" class="container col-md-auto" style="padding: 5px;">
+                <span id="list-{{ list.idName }}-name" style="float: left; color: MidnightBlue; font-weight: bold; margin-right: 3px; white-space: pre;">{{ list.name }}</span>
+                <input autofocus class="form-control editInput" id="edit-list-{{ list.idName }}-name" type="text" name="name" placeholder="New List Name" style="display: none; float: left; font-weight: bold; margin-left: -3.7px;" oninput="onInput('edit-list-{{ list.idName }}-name')">
+                <span class="boldMeasure"></span>
+                <span id="list-{{ list.idName }}-delete" style="float: right;" class="hover" onclick="delete_list('{{ list.idName }}')">Delete</span>
+                <span id="edit-list-{{ list.idName }}-submit" class="hover" style="display: none; float: right; margin-left: 7px; margin-right: 7px;" onclick="edit_list_submit('{{ list.idName }}')">Save</span>
+                <span id="edit-list-{{ list.idName }}" style="float: right; margin-left: 7px; margin-right: 7px;" class="hover" onclick="edit_list('{{ list.idName }}')">Edit</span>
+                <br>
+                <div id="tasks-{{ list.idName }}" class="d-flex flex-column">
+                    {% for task in list.tasks.all %}
+                        <div id="task-{{ task.idText }}" class="container" style="min-width: 240px; background-color: SkyBlue; margin: 0px; margin-bottom: 5px; padding: 5px;">
+                            <span id="task-{{ task.idText }}-text" style="float: left; color: MidnightBlue; margin-right: 3px; white-space: pre;">{{ task.text }}</span>
+                            <input autofocus class="form-control editInput" id="edit-task-{{ task.idText }}-text" type="text" name="name" placeholder="New Task Text" style="display: none; float: left; margin-left: -3.7px;" oninput="onInput('edit-task-{{ task.idText }}-text')">
+                            <span class="editMeasure"></span>
+                            <span id="task-{{ task.idText }}-delete" style="float: right;" class="hover" onclick="delete_task('{{ task.idText }}')">Delete</span>
+                            <span id="edit-task-{{ task.idText }}-submit" class="hover" style="display: none; float: right; margin-left: 7px; margin-right: 7px;" onclick="edit_task_submit('{{ task.idText }}')">Save</span>
+                            <span id="edit-task-{{ task.idText }}" style="float: right; margin-left: 7px; margin-right: 7px;" class="hover" onclick="edit_task('{{ task.idText }}')">Edit</span>
+                            <br>
+                            <div id="categories-{{ task.idText }}" style="margin-bottom: 12px;">
+                                {% for category in task.categories.all %}
+                                    <div class="circle {{ category.idName }}Circle" id="category-{{ task.idText }}-{{ category.idName }}" style="background-color: {{ category.color }}"></div>
+                                {% endfor %}
+                            </div>
+                            <span id="set-category-{{ task.idText }}" class="hover" onclick="set_category('{{ task.idText }}')">Set categories</span>
+                            <div id="category-form-{{ task.idText }}" class="categoryForm" style="display: none;">
+                                {% for category in categories %}
+                                    <div class="form-check form-check-inline">
+                                        {% if category in task.categories.all %}
+                                            <input class="form-check-input {{ category.idName }}Form" name="name{{ task.idText }}" type="checkbox" id="set-category-{{ task.idText }}-{{ category.idName }}" checked="checked">
+                                        {% else %}
+                                            <input class="form-check-input {{ category.idName }}Form" name="name{{ task.idText }}" type="checkbox" id="set-category-{{ task.idText }}-{{ category.idName }}">
+                                        {% endif %}
+                                        <label class="form-check-label {{ category.idName }}Label" id="label-{{ task.idText }}-{{ category.idName }}" for="set-category-{{ task.idText }}-{{ category.idName }}" style="white-space: pre;">{{ category.name }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button id="set-category-{{ task.idText }}-submit" class="btn btn-primary" style="display: none;" onclick="submit_set_category('{{ task.idText }}')">Confirm Categories</button>
+                            <span id="set-category-{{ task.idText }}-cancel" class="hover" onclick="stop_set_category('{{ task.idText }}')" style="display: none;">Cancel</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <span id="add-task-{{ list.idName }}" class="hover" onclick="add_task('{{ list.idName }}')">Add a task</span>
+                <input autofocus class="form-control" id="add-task-{{ list.idName }}-text" type="text" name="name" placeholder="Task Text" style="display: none; margin-bottom: 5px; min-width: 155px; width: 155px; margin-top: 5px;" oninput="onInput('add-task-{{ list.idName }}-text')">
+                <span class="addMeasure"></span>
+                <button id="add-task-{{ list.idName }}-submit" class="btn btn-primary" style="display: none;" onclick="submit_add_task('{{ list.idName }}')">Add Task</button>
+                <span id="add-task-{{ list.idName }}-cancel" class="hover" onclick="stop_add_task('{{ list.idName }}')" style="display: none;">Cancel</span>
+            </div>
+        {% endfor %}
+        <div id="add-list-text" class="hover container col-md-auto" onclick="add_list()" style="background-color: silver; min-width: 150px; padding-top: 5px; padding-bottom: 5px; height: 35px;">
+            <p>Add a list</p>
+        </div>
+        <div id="add-list" class="container col-md-auto" style="display: none; padding-top: 5px; padding-bottom: 5px; min-width: 150px;">
+            <input autofocus class="form-control" id="list-name" type="text" name="name" placeholder="List Name" style="margin-bottom: 5px; min-width: 140px;" oninput="onInput('list-name')">
+            <span class="addMeasure"></span>
+            <button id="add-list-submit" class="btn btn-primary">Add List</button>
+            <span id="add-list-cancel" class="hover" onclick="stop_add_list()">Cancel</span>
+        </div>
+    </div>
+{% endblock %}

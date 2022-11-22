@@ -1,0 +1,77 @@
+.body {
+    padding: 10px;
+}
+
+.hover:hover {
+    color: MidnightBlue;
+}
+
+.container {
+    background-color: lightsteelblue;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+    min-width: 250px;
+    max-width: 1000000px;
+}
+
+.circle {
+    width: 35px;
+    height: 12px;
+    border-radius: 10px;
+    float: left;
+    margin-right: 2px;
+}
+
+input[type="color"] {
+	-webkit-appearance: none;
+	border: none;
+    border-radius: 15px;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+	border: white solid;
+    border-radius: 15px;
+}
+
+.editInput, .editInput:focus{
+	background: transparent;
+	border: white solid;
+    padding: 0px;
+    padding-left: 2px;
+	color: black;
+	height: 24px;
+}
+
+.editInput::placeholder {
+    color: black;
+}
+
+.editMeasure {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+	padding: 3.2px;
+    white-space: pre;
+}
+
+.addMeasure {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+	padding: 13.2px;
+    white-space: pre;
+}
+
+.boldMeasure {
+	font-weight: bold;
+	position: absolute;
+    left: -9999px;
+    top: -9999px;
+	padding: 3.2px;
+    white-space: pre;
+}
