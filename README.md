@@ -1,6 +1,6 @@
 # AlanYao08
 
-Official certificates for all 3 courses can be found in this folder: [CS50]("CS50x Certificate.pdf"), [CS50Web]("CS50W Certificate.pdf"), [CS50AI]("CS50AI Certificate.pdf")
+Official certificates for all 3 courses can be found in this folder: [CS50](CS50x%20Certificate.pdf), [CS50Web](CS50W%20Certificate.pdf), [CS50AI](CS50AI%20Certificate.pdf)
 
 ### CS50 & CS50Web Final Projects:
 https://github.com/AlanYao08/CS50/tree/web50/projects/2020/x/capstone
